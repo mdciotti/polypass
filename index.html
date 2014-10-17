@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>PolyPass</title>
+		<script src="md5.js"></script>
+		<script src="base64.js"></script>
+		<script src="polypass.js"></script>
+		<style type="text/css">
+body {
+	margin: 0;
+	font-family: Bariol;
+	font-size: 1.5rem;
+}
+header {
+	background-color: #222222;
+	color: #dddddd;
+	padding: 1rem 0;
+}
+h1, h2 {
+	margin: 0;
+}
+section {
+	padding: 2rem 0;
+}
+.container {
+	width: 50rem;
+	margin: 0 auto;
+	position: relative;
+}
+.left, .right { width: 50%; position: relative; top: 0; }
+.right { right: 0; }
+.lightgrey { background-color: #cccccc; }
+.orange { background-color: #ff7f00; }
+ul.plain {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+	font-size: 1rem;
+}
+input, textarea {
+	font-size: 1rem;
+	display: block;
+	background-color: #aaaaaa;
+	border: none;
+	border-radius: 0.25rem;
+	padding: 0.25rem;
+	resize: none;
+
+	-webkit-appearance: none;
+	-moz-appearance: none;
+}
+textarea {
+	height: 10rem;
+}
+		</style>
+	</head>
+	<body>
+		<!-- <canvas width="800" height="600" id="screen"></canvas> -->
+		<header>
+			<div class="container">
+				<h1>PolyPass.js</h1>
+			</div>
+		</header>
+		<section class="lightgrey">
+			<div class="container">
+				<div class="left">
+					<h2>Create Keys</h2>
+					<ul class="plain">
+						<li><label for="msg">Message: <input type="text" id="msg" placeholder="enter a message..." /></li>
+						<li><label for="num" title="How many keys do you wish to distribute?">Total number of keys: <input type="number" id="num" value="5" min="2" /></li>
+						<li><label for="req" title="How many keys are required to rebuild the secret message?">Required number of keys: <input type="number" id="req" value="3" min="2" /></li>
+						<li><label for="keys">Keys: <textarea id="keys"></textarea></li>
+					</ul>
+				</div>
+				<div class="right">
+					<h2>Combine Keys</h2>
+				</div>
+			</div>
+		</section>
+		<section class="orange">
+			<div class="container">
+				<h2>What is a PolyPass?</h2>
+				<p>Lorem ipsum dolor sit amet&hellip;</p>
+			</div>
+		</section>
+		<script>
+			var secret = 1234;
+			var sh = split(secret, 6, 3);
+			var newshares = [sh[2 - 1], sh[4 - 1], sh[5 - 1]];
+			console.log("Secret:", secret);
+			console.log(sh);
+			console.log("Secret:", join(newshares));
+
+			var msg = document.getElementById("msg");
+			var num = document.getElementById("num");
+			var req = document.getElementById("req");
+			var keys = document.getElementById("keys");
+
+			function update() {
+				var secret = txt_to_num(msg.value);
+				var shares = split(secret, parseInt(num.value), parseInt(req.value));
+				keys.value = JSON.stringify(shares).slice(1, -1).replace(/\],/g, "]\n");
+			}
+
+			msg.addEventListener("keypress", update, false);
+			num.addEventListener("change", update, false);
+			req.addEventListener("change", update, false);
+		</script>
+	</body>
+</html>
